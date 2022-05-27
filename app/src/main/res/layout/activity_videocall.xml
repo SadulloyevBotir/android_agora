@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|center_vertical">
+
+            <TextView
+                android:id="@+id/tv_timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/call_hour"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+
+
+    </androidx.appcompat.widget.Toolbar>
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
+
+        <FrameLayout
+            android:id="@+id/local_video_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:backgroundTint="@color/red"/>
+
+
+            <FrameLayout
+                android:id="@+id/remote_video_view_container"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/item_corners_rounded"
+                android:backgroundTint="@color/black"
+                android:orientation="vertical" />
+
+
+            <FrameLayout
+                android:id="@+id/local_video_view_container_2"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/item_corners_rounded"
+                android:backgroundTint="@color/black"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/local_user_profile_image"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/im_sample_1"
+                    app:shapeAppearanceOverlay="@style/im_circle" />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="300dp"
+                android:layout_height="65dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/item_fun_collections"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="horizontal"
+                android:paddingLeft="25dp"
+                android:paddingTop="5dp"
+                android:paddingRight="25dp"
+                android:paddingBottom="5dp">
+
+                <LinearLayout
+                    android:id="@+id/bn_leave"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/item_fun_circle"
+                    android:backgroundTint="@color/red"
+                    android:gravity="center_horizontal|center_vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_call" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/bn_microphone"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="15dp"
+                    android:background="@drawable/item_fun_circle"
+                    android:gravity="center_horizontal|center_vertical">
+
+                    <ImageView
+                        android:id="@+id/ic_microphone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_microphone_on" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/bn_camera"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="15dp"
+                    android:background="@drawable/item_fun_circle"
+                    android:gravity="center_horizontal|center_vertical">
+
+                    <ImageView
+                        android:id="@+id/ic_camera"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_camera_on" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/bn_camera_change"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="15dp"
+                    android:background="@drawable/item_fun_circle"
+                    android:gravity="center_horizontal|center_vertical">
+
+                    <ImageView
+                        android:id="@+id/ic_camera_change"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_camera_change" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+
+</LinearLayout>
