@@ -78,14 +78,9 @@ class VideoCallActivity : AppCompatActivity(), HBRecorderListener {
             //Init HBRecorder
             hbRecorder = HBRecorder(this, this)
             bt_start_record = findViewById(R.id.bn_record)
-            //When the user returns to the application, some UI changes might be necessary,
-            //check if recording is in progress and make changes accordingly
-//            if (hbRecorder!!.isBusyRecording) {
-//                ic_record.setImageResource(R.drawable.bt_record_stop)
-//            }
+
             initializeAndJoinChannel()
         }
-//        setOnClickListeners()
         initViews()
     }
 
@@ -108,7 +103,7 @@ class VideoCallActivity : AppCompatActivity(), HBRecorderListener {
                 callMicrophoneButton()
             }
 
-            //Button camera
+            //Button recorder
             bnRecord.setOnClickListener {
                 if (hbRecorder!!.isBusyRecording) {
                     hbRecorder!!.stopScreenRecording()
@@ -125,13 +120,6 @@ class VideoCallActivity : AppCompatActivity(), HBRecorderListener {
                 callCameraChangeButton()
             }
         }
-
-        //When the user returns to the application, some UI changes might be necessary,
-        //check if recording is in progress and make changes accordingly
-
-        //When the user returns to the application, some UI changes might be necessary,
-        //check if recording is in progress and make changes accordingly
-
     }
 
     override fun HBRecorderOnStart() {
