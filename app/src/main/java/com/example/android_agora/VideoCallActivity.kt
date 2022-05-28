@@ -1,26 +1,44 @@
 package com.example.android_agora
 
 import android.Manifest
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.projection.MediaProjectionManager
+import android.os.Build
 import android.os.Bundle
-import android.os.CountDownTimer
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.android_agora.databinding.ActivityVideocallBinding
+import com.hbisoft.hbrecorder.HBRecorder
+import com.hbisoft.hbrecorder.HBRecorderListener
 import io.agora.rtc.IRtcEngineEventHandler
 import io.agora.rtc.RtcEngine
 import io.agora.rtc.video.VideoCanvas
 
-class VideoCallActivity : AppCompatActivity() {
+
+class VideoCallActivity : AppCompatActivity(), HBRecorderListener {
     lateinit var binding: ActivityVideocallBinding
     private var isClicked: Boolean = true
+    lateinit var hbRecorder: HBRecorder
+    lateinit var bt_start_record: LinearLayout
+    lateinit var ic_record: ImageView
+    private lateinit var byteArray: ByteArray
 
+    //Permissions
+    private val SCREEN_RECORD_REQUEST_CODE = 777
+    private var hasPermissions = false
     // Kotlin
     private val PERMISSION_REQ_ID_RECORD_AUDIO = 22
+
     private val PERMISSION_REQ_ID_CAMERA = PERMISSION_REQ_ID_RECORD_AUDIO + 1
+    private val PERMISSION_REQ_ID_WRITE_EXTERNAL_STORAGE = PERMISSION_REQ_ID_RECORD_AUDIO + 1
 
     // Kotlin
     // Fill the App ID of your project generated on Agora Console.
@@ -54,24 +72,35 @@ class VideoCallActivity : AppCompatActivity() {
         binding = ActivityVideocallBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if (checkSelfPermission(
-                Manifest.permission.RECORD_AUDIO,
-                PERMISSION_REQ_ID_RECORD_AUDIO
-            ) && checkSelfPermission(
-                Manifest.permission.CAMERA, PERMISSION_REQ_ID_CAMERA
-            )
-        ) {
+        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO, PERMISSION_REQ_ID_RECORD_AUDIO)
+            && checkSelfPermission(Manifest.permission.CAMERA, PERMISSION_REQ_ID_CAMERA)) {
+
+            //Init HBRecorder
+            hbRecorder = HBRecorder(this, this)
+            bt_start_record = findViewById(R.id.bn_record)
+            //When the user returns to the application, some UI changes might be necessary,
+            //check if recording is in progress and make changes accordingly
+//            if (hbRecorder!!.isBusyRecording) {
+//                ic_record.setImageResource(R.drawable.bt_record_stop)
+//            }
             initializeAndJoinChannel()
         }
+//        setOnClickListeners()
         initViews()
     }
 
     private fun initViews() {
+        //Init HBRecorder
+        //Init HBRecorder
+
+        ic_record = findViewById(R.id.ic_record)
+
+        hbRecorder = HBRecorder(this, this)
         binding.apply {
             //Button leave click
             bnLeave.setOnClickListener {
                 callLeaveButton()
-
+                hbRecorder!!.stopScreenRecording()
             }
 
             //Button microphone
@@ -80,8 +109,14 @@ class VideoCallActivity : AppCompatActivity() {
             }
 
             //Button camera
-            bnCamera.setOnClickListener {
-                callCameraButton()
+            bnRecord.setOnClickListener {
+                if (hbRecorder!!.isBusyRecording) {
+                    hbRecorder!!.stopScreenRecording()
+                    ic_record.setImageResource(R.drawable.bt_record)
+                } else {
+                    ic_record.setImageResource(R.drawable.bt_record_stop)
+                    startRecordingScreen()
+                }
             }
 
             //Button camera change
@@ -89,11 +124,44 @@ class VideoCallActivity : AppCompatActivity() {
             bnCameraChange.setOnClickListener {
                 callCameraChangeButton()
             }
-
         }
+
+        //When the user returns to the application, some UI changes might be necessary,
+        //check if recording is in progress and make changes accordingly
+
+        //When the user returns to the application, some UI changes might be necessary,
+        //check if recording is in progress and make changes accordingly
 
     }
 
+    override fun HBRecorderOnStart() {
+        //When the recording starts
+    }
+
+    override fun HBRecorderOnComplete() {
+        //After file was created
+    }
+
+    override fun HBRecorderOnError(errorCode: Int, reason: String?) {
+        //When an error occurs
+    }
+
+    //Start Button OnClickListener
+    private fun startRecordingScreen() {
+        val mediaProjectionManager = getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+        val permissionIntent = mediaProjectionManager?.createScreenCaptureIntent()
+        startActivityForResult(permissionIntent, SCREEN_RECORD_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == SCREEN_RECORD_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                //Start screen recording
+                hbRecorder!!.startScreenRecording(data, resultCode, this)
+            }
+        }
+    }
 
     private val mRtcEventHandler = object : IRtcEngineEventHandler() {
         // Listen for the remote user joining the channel to get the uid of the user.
@@ -167,7 +235,7 @@ class VideoCallActivity : AppCompatActivity() {
         binding.apply {
 
             if (isClicked) {
-                icCamera.setImageResource(R.drawable.ic_camera_off)
+//                icCamera.setImageResource(R.drawable.ic_camera_off)
                 mRtcEngine!!.disableVideo()
 
                 localVideoViewContainer2.visibility = View.VISIBLE
@@ -177,7 +245,7 @@ class VideoCallActivity : AppCompatActivity() {
                 isClicked = false
             } else {
                 localVideoViewContainer2.visibility = View.GONE
-                icCamera.setImageResource(R.drawable.ic_camera_on)
+//                icCamera.setImageResource(R.drawable.ic_camera_on)
                 mRtcEngine!!.enableVideo()
                 isClicked = true
             }
